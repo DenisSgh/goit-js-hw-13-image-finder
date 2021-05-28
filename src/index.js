@@ -1,8 +1,3 @@
-//! Нахимичить стилей
-//! Сделать Element.scrollIntoView()
-//! Добавить функционал отображения большой версии изображения
-//? Вместо кнопки Load more можно сделать бесконечную загрузку при скроле используя Intersection Observer
-
 import './css/styles.css';
 import { refs } from './js/refs.js';
 import Images from './js/imagesClass.js';
@@ -24,21 +19,22 @@ function onClickButtonSubmit(e) {
     return invalidRequest();
   }
 
+  imagesList.resetPage();
   refs.list.innerHTML = '';
   fetchArticles();
 }
 
 function fetchArticles() {
-  refs.loadMore.disabled = true;
-
-  setTimeout(() => {
-    imagesList.fetchImages().then(images => {
-      renderImages(images);
-      refs.loadMore.disabled = false;
-    });
-  }, 200);
+  imagesList.fetchImages().then(images => {
+    renderImages(images);
+    refs.loadMore.style.display = 'inline-block';
+  });
 }
 
 function renderImages(images) {
   refs.list.insertAdjacentHTML('beforeend', imagesTpl(images));
+  refs.list.scrollIntoView({
+    behavior: 'smooth',
+    block: 'end',
+  });
 }
